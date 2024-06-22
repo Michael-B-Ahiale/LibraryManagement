@@ -1,0 +1,43 @@
+Library Management System Documentation
+Overview
+This JavaFX-based Library Management System facilitates efficient book and patron management, along with borrowing and returning functionalities.
+Functional Requirements
+Book Management
+
+Add new books with details (title, author, ISBN, genre, publication year)
+Update existing book information
+Remove books from the collection
+
+Patron Management
+
+Add new patrons with name, email, and phone number
+
+Borrowing and Returning
+
+Issue books to patrons, recording borrower details and issue date
+Process book returns
+
+Non-Functional Requirements
+Performance
+
+Responsive user interface
+Scalable to handle increasing users and books
+
+Usability
+
+Intuitive JavaFX-based GUI
+
+Maintainability
+
+Well-documented, commented code
+Modular design for future enhancements
+
+Compatibility
+
+MySQL backend integration with JavaFX frontend
+
+Technical Stack
+
+Frontend: JavaFX
+Backend: Java
+Database: MySQL

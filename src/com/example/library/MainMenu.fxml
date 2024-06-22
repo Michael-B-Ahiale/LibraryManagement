@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.MainMenuController"
+            style="-fx-background-color: #f0f0f0;" prefWidth="800" prefHeight="600">
+    <top>
+        <HBox alignment="CENTER" style="-fx-background-color: #007bff;">
+            <Label text="Library Management System" style="-fx-font-size: 24px; -fx-text-fill: white;">
+                <font>
+                    <Font name="Arial Bold" size="24.0" />
+                </font>
+                <HBox.margin>
+                    <Insets top="20" bottom="20" />
+                </HBox.margin>
+            </Label>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox alignment="TOP_LEFT" spacing="10" style="-fx-background-color: #ffffff;" prefWidth="200">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="10" />
+            </padding>
+            <Button fx:id="manageBooksBtn" onAction="#handleManageBooks" text="Manage Books" maxWidth="Infinity"
+                    style="-fx-background-color: #f8f9fa; -fx-text-fill: #007bff; -fx-border-color: #007bff; -fx-border-radius: 5;" />
+            <Button fx:id="createPatronBtn" onAction="#handleCreatePatron" text="Create Patron" maxWidth="Infinity"
+                    style="-fx-background-color: #f8f9fa; -fx-text-fill: #007bff; -fx-border-color: #007bff; -fx-border-radius: 5;" />
+            <Button fx:id="transactionsBtn" onAction="#handleTransactions" text="Transactions" maxWidth="Infinity"
+                    style="-fx-background-color: #f8f9fa; -fx-text-fill: #007bff; -fx-border-color: #007bff; -fx-border-radius: 5;" />
+        </VBox>
+    </left>
+
+    <center>
+        <VBox fx:id="contentArea" alignment="CENTER" style="-fx-background-color: white;">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20" />
+            </padding>
+            <Label text="Welcome to the Library Management System" style="-fx-font-size: 18px;">
+                <VBox.margin>
+                    <Insets bottom="10" />
+                </VBox.margin>
+            </Label>
+            <Label text="Please select an option from the menu" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
+        </VBox>
+    </center>
+</BorderPane>

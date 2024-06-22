@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="700.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.TransactionController">
+    <children>
+        <VBox spacing="10" layoutX="20.0" layoutY="20.0">
+            <HBox spacing="10">
+                <Label text="Patron ID:" />
+                <TextField fx:id="patronIdField" />
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Book ID:" />
+                <TextField fx:id="bookIdField" />
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Collection Date:" />
+                <DatePicker fx:id="collectionDatePicker" />
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Return Date:" />
+                <DatePicker fx:id="returnDatePicker" />
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Librarian Code:" />
+                <TextField fx:id="librarianCodeField" />
+            </HBox>
+            <HBox spacing="10">
+                <Button fx:id="borrowButton" onAction="#handleBorrowBook" text="Borrow" />
+                <Button fx:id="returnButton" onAction="#handleReturnBook" text="Return" />
+                <Button fx:id="refreshButton" onAction="#handleRefresh" text="Refresh" />
+            </HBox>
+        </VBox>
+
+        <VBox spacing="10" layoutX="300.0" layoutY="20.0" prefWidth="380.0">
+            <HBox spacing="10">
+                <Label text="Search:" />
+                <TextField fx:id="searchField" prefWidth="200.0" />
+                <Button fx:id="searchButton" onAction="#handleSearch" text="Search" />
+            </HBox>
+            <TableView fx:id="transactionTable" prefHeight="330.0" prefWidth="380.0">
+                <columns>
+                    <TableColumn fx:id="idColumn" text="ID" prefWidth="40.0" />
+                    <TableColumn fx:id="bookIdColumn" text="Book ID" prefWidth="60.0" />
+                    <TableColumn fx:id="patronIdColumn" text="Patron ID" prefWidth="60.0" />
+                    <TableColumn fx:id="collectionDateColumn" text="Collection Date" prefWidth="80.0" />
+                    <TableColumn fx:id="returnDateColumn" text="Return Date" prefWidth="80.0" />
+                    <TableColumn fx:id="returnStatusColumn" text="Status" prefWidth="60.0" />
+                </columns>
+            </TableView>
+        </VBox>
+    </children>
+</AnchorPane>
