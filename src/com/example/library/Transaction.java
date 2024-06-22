@@ -1,40 +1,32 @@
 package com.example.library;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Transaction {
     private int id;
-    private int patronId;
     private int bookId;
-    private Date borrowDate;
-    private Date returnDate;
+    private int patronId;
+    private LocalDate collectionDate;
+    private LocalDate returnDate;
+    private String status;
+    private String librarianCode;
 
-    // Constructors
-    public Transaction() {}
-
-    public Transaction(int id, int patronId, int bookId, Date borrowDate, Date returnDate) {
+    public Transaction(int id, int bookId, int patronId, LocalDate collectionDate, LocalDate returnDate, String status, String librarianCode) {
         this.id = id;
-        this.patronId = patronId;
         this.bookId = bookId;
-        this.borrowDate = borrowDate;
+        this.patronId = patronId;
+        this.collectionDate = collectionDate;
         this.returnDate = returnDate;
+        this.status = status;
+        this.librarianCode = librarianCode;
     }
 
-    // Getters and Setters
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getPatronId() {
-        return patronId;
-    }
-
-    public void setPatronId(int patronId) {
-        this.patronId = patronId;
     }
 
     public int getBookId() {
@@ -45,19 +37,56 @@ public class Transaction {
         this.bookId = bookId;
     }
 
-    public Date getBorrowDate() {
-        return borrowDate;
+    public int getPatronId() {
+        return patronId;
     }
 
-    public void setBorrowDate(Date borrowDate) {
-        this.borrowDate = borrowDate;
+    public void setPatronId(int patronId) {
+        this.patronId = patronId;
     }
 
-    public Date getReturnDate() {
+    public LocalDate getCollectionDate() {
+        return collectionDate;
+    }
+
+    public void setCollectionDate(LocalDate collectionDate) {
+        this.collectionDate = collectionDate;
+    }
+
+    public LocalDate getReturnDate() {
         return returnDate;
     }
 
-    public void setReturnDate(Date returnDate) {
+    public void setReturnDate(LocalDate returnDate) {
         this.returnDate = returnDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getLibrarianCode() {
+        return librarianCode;
+    }
+
+    public void setLibrarianCode(String librarianCode) {
+        this.librarianCode = librarianCode;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", bookId=" + bookId +
+                ", patronId=" + patronId +
+                ", collectionDate=" + collectionDate +
+                ", returnDate=" + returnDate +
+                ", returnStatus='" + status + '\'' +
+                ", librarianCode='" + librarianCode + '\'' +
+                '}';
     }
 }
