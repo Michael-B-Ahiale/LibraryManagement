@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<AnchorPane prefHeight="450.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.abmike.controller.BookManagerController">
+    <children>
+        <TableView fx:id="bookTable" layoutX="14.0" layoutY="14.0" prefHeight="260.0" prefWidth="500.0">
+            <columns>
+                <TableColumn fx:id="titleColumn" prefWidth="100.0" text="Title" />
+                <TableColumn fx:id="authorColumn" prefWidth="100.0" text="Author" />
+                <TableColumn fx:id="isbnColumn" prefWidth="100.0" text="ISBN" />
+                <TableColumn fx:id="availabilityColumn" prefWidth="100.0" text="Available" />
+                <TableColumn fx:id="countColumn" prefWidth="100.0" text="Count" />
+            </columns>
+        </TableView>
+        <Button fx:id="addNewBookButton" layoutX="524.0" layoutY="24.0" mnemonicParsing="false" onAction="#handleAddNewBook" text="Add New Book" />
+        <Button fx:id="editBookButton" layoutX="524.0" layoutY="64.0" mnemonicParsing="false" onAction="#handleEditBook" text="Edit Book" />
+        <Button fx:id="deleteBookButton" layoutX="524.0" layoutY="104.0" mnemonicParsing="false" onAction="#handleDeleteBook" text="Delete Book" />
+        <Button fx:id="saveButton" layoutX="524.0" layoutY="144.0" mnemonicParsing="false" onAction="#handleSaveBook" text="Save" />
+        <Button fx:id="cancelButton" layoutX="524.0" layoutY="184.0" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
+
+        <TextField fx:id="titleField" layoutX="14.0" layoutY="300.0" promptText="Title" />
+        <TextField fx:id="authorField" layoutX="14.0" layoutY="340.0" promptText="Author" />
+        <TextField fx:id="isbnField" layoutX="14.0" layoutY="380.0" promptText="ISBN" />
+        <TextField fx:id="countField" layoutX="14.0" layoutY="420.0" promptText="Count" />
+    </children>
+</AnchorPane>
