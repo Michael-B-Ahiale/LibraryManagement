@@ -16,41 +16,21 @@ public class TransactionManagement {
 
     public TransactionManagement(Connection connection) {
         this.connection = connection;
-        createTransactionsTableIfNotExists();
-    }
-
-    private void createTransactionsTableIfNotExists() {
-        String createTableSQL = "CREATE TABLE IF NOT EXISTS transactions (" +
-                "id INT AUTO_INCREMENT PRIMARY KEY, " +
-                "bookId INT NOT NULL, " +
-                "patronId INT NOT NULL, " +
-                "collectionDate DATE NOT NULL, " +
-                "returnDate DATE, " +
-                "librarian_code VARCHAR(50) NOT NULL, " +
-                "returnStatus VARCHAR(20) NOT NULL, " +
-                "FOREIGN KEY (book_id) REFERENCES books(id), " +
-                "FOREIGN KEY (patron_id) REFERENCES patrons(id))";
-
-        try (Statement stmt = connection.createStatement()) {
-            if (stmt == null) {
-                LOGGER.severe("Failed to create statement object");
-                return;
-            }
-            stmt.execute(createTableSQL);
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Error creating transactions table", e);
-        }
-
     }
 
     public void borrowBook(int bookId, int patronId, LocalDate collectionDate, LocalDate returnDate, String returnStatus, String librarianCode) throws SQLException {
+        // First, check if the book and patron exist
+        if (!bookExists(bookId) || !patronExists(patronId)) {
+            throw new SQLException("Book or Patron does not exist");
+        }
+
         String query = "INSERT INTO transactions (bookId, patronId, collectionDate, returnDate, returnStatus, librarian_code) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, bookId);
             stmt.setInt(2, patronId);
             stmt.setDate(3, Date.valueOf(collectionDate));
-            stmt.setDate(4, Date.valueOf(returnDate));
+            stmt.setDate(4, returnDate != null ? Date.valueOf(returnDate) : null);
             stmt.setString(5, returnStatus);
             stmt.setString(6, librarianCode);
             stmt.executeUpdate();
@@ -83,16 +63,7 @@ public class TransactionManagement {
         try (PreparedStatement stmt = connection.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                Transaction transaction = new Transaction(
-                        rs.getInt("id"),
-                        rs.getInt("bookId"),
-                        rs.getInt("patronId"),
-                        rs.getDate("collectionDate").toLocalDate(),
-                        rs.getDate("returnDate") != null ? rs.getDate("returnDate").toLocalDate() : null,
-                        rs.getString("returnStatus"),
-                        rs.getString("librarian_code")
-                );
-                transactions.add(transaction);
+                transactions.add(extractTransactionFromResultSet(rs));
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error getting all transactions", e);
@@ -108,8 +79,7 @@ public class TransactionManagement {
             stmt.setInt(1, patronId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    Transaction transaction = extractTransactionFromResultSet(rs);
-                    transactions.add(transaction);
+                    transactions.add(extractTransactionFromResultSet(rs));
                 }
             }
         } catch (SQLException e) {
@@ -125,14 +95,12 @@ public class TransactionManagement {
                 "bookId LIKE ? OR patronId LIKE ? OR librarian_code LIKE ? OR returnStatus LIKE ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             String wildcardTerm = "%" + searchTerm + "%";
-            stmt.setString(1, wildcardTerm);
-            stmt.setString(2, wildcardTerm);
-            stmt.setString(3, wildcardTerm);
-            stmt.setString(4, wildcardTerm);
+            for (int i = 1; i <= 4; i++) {
+                stmt.setString(i, wildcardTerm);
+            }
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    Transaction transaction = extractTransactionFromResultSet(rs);
-                    transactions.add(transaction);
+                    transactions.add(extractTransactionFromResultSet(rs));
                 }
             }
         } catch (SQLException e) {
@@ -142,6 +110,28 @@ public class TransactionManagement {
         return transactions;
     }
 
+    public void deleteTransactionsForBook(int bookId) throws SQLException {
+        String query = "DELETE FROM transactions WHERE bookId = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, bookId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error deleting transactions for book", e);
+            throw e;
+        }
+    }
+
+    public void deleteTransactionsForPatron(int patronId) throws SQLException {
+        String query = "DELETE FROM transactions WHERE patronId = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, patronId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error deleting transactions for patron", e);
+            throw e;
+        }
+    }
+
     private Transaction extractTransactionFromResultSet(ResultSet rs) throws SQLException {
         return new Transaction(
                 rs.getInt("id"),
@@ -149,8 +139,34 @@ public class TransactionManagement {
                 rs.getInt("patronId"),
                 rs.getDate("collectionDate").toLocalDate(),
                 rs.getDate("returnDate") != null ? rs.getDate("returnDate").toLocalDate() : null,
-                rs.getString("librarian_code"),
-                rs.getString("returnStatus")
+                rs.getString("returnStatus"),
+                rs.getString("librarian_code")
         );
+    }
+
+    private boolean bookExists(int bookId) throws SQLException {
+        String query = "SELECT COUNT(*) FROM books WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, bookId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean patronExists(int patronId) throws SQLException {
+        String query = "SELECT COUNT(*) FROM patron WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, patronId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
     }
 }

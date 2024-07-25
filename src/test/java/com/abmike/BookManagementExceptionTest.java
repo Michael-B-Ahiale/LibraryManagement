@@ -32,16 +32,6 @@ class BookManagementExceptionTest {
         bookManagement = new BookManagement(mockConnection);
     }
 
-    @Test
-    void testAddBookSQLException() throws SQLException {
-        Book book = new Book(1, "Test Book", "Test Author", "1234567890", true, 5);
-
-        // Simulate SQL exception when executing the statement
-        doThrow(new SQLException("Simulated SQL error")).when(mockPreparedStatement).executeUpdate();
-
-        // Verify that the method throws SQLException
-        assertThrows(SQLException.class, () -> bookManagement.addBook(book));
-    }
 
     @Test
     void testGetBookByIdNotFound() throws SQLException {

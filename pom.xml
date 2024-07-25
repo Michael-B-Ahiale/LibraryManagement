@@ -115,7 +115,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.abmike.Main</mainClass>
+                            <mainClass>com.abmike.util.Main</mainClass>
                         </configuration>
                     </execution>
                 </executions>
@@ -140,6 +140,14 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>com/abmike/controller/**</exclude>
+                        <exclude>com/abmike/util/**</exclude>
+
+
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>

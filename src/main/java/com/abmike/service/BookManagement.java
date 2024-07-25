@@ -2,51 +2,59 @@ package com.abmike.service;
 
 import com.abmike.model.Book;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class BookManagement {
 
     private Connection connection;
-    private LinkedList<Book> bookCache; // LinkedList to cache books
-    private Queue<Book> processingQueue; // Queue for books to be processed
+    private LinkedList<Book> bookCache;
+    private Queue<Book> processingQueue;
 
     public BookManagement(Connection connection) {
         this.connection = connection;
-        this.bookCache = new LinkedList<>(); // Initialize the LinkedList
-        this.processingQueue = new LinkedList<>(); // Initialize the Queue
+        this.bookCache = new LinkedList<>();
+        this.processingQueue = new LinkedList<>();
     }
 
-    // Method to add a book to the processing queue
     public void queueBookForProcessing(Book book) {
         processingQueue.offer(book);
     }
 
-    // Method to process the next book in the queue
     public Book processNextBook() {
         return processingQueue.poll();
     }
 
-    // Method to get the number of books waiting to be processed
     public int getProcessingQueueSize() {
         return processingQueue.size();
     }
 
-    public void addBook(Book book) throws SQLException {
+    public int addBook(Book book) throws SQLException {
         String query = "INSERT INTO books (title, author, isbn, available, count) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, book.getTitle());
             stmt.setString(2, book.getAuthor());
             stmt.setString(3, book.getIsbn());
             stmt.setBoolean(4, book.isAvailable());
             stmt.setInt(5, book.getCount());
-            stmt.executeUpdate();
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating book failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int id = generatedKeys.getInt(1);
+                    book.setId(id);
+                    bookCache.add(book);
+                    return id;
+                } else {
+                    throw new SQLException("Creating book failed, no ID obtained.");
+                }
+            }
         }
-        bookCache.add(book); // Add the book to the cache
     }
 
     public void updateBook(Book book) throws SQLException {

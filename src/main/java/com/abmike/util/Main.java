@@ -1,4 +1,4 @@
-package com.abmike;
+package com.abmike.util;
 
 import com.abmike.controller.MainMenuController;
 import com.abmike.service.BookManagement;
@@ -10,7 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
